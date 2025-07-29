@@ -42,16 +42,14 @@ jobs:
           echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > ~/.kube/config
 
       - name: Modify Kubeconfig for Insecure Connection
-       
         run: |
           CLUSTER_NAME=$(kubectl config view -o jsonpath='{.clusters[0].name}')
           kubectl config set-cluster "$CLUSTER_NAME" --insecure-skip-tls-verify=true
 
-      - name: Deploy to Kubernetes
-        
+      - name: Apply Kubernetes manifests
         run: |
           kubectl apply -f k8s/
           
-      - name: Verify deployment
+      - name: Restart deployment to pull new image
         run: |
-          kubectl rollout status deployment/flask-app-deployment
+          kubectl rollout restart deployment/flask-app-deployment
