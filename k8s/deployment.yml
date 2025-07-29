@@ -20,5 +20,6 @@ spec:
       - name: flask-app-container
         
         image: puffy3/flask-k8s-app:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
